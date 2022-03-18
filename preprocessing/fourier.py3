@@ -1,22 +1,24 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def fourier(df, column, lo, hix, prefix=None, plot=True):
+def fourier(df, column, lo, nunique, prefix=None, plot=True):
     '''
     Generate fourier/trigonometric feature for/from a periodic/cyclic discrete values.
     
     `df` is pandas.DataFrame where the generated features will be added as columns.
-    The generated columns name will be prefixed with `prefix`.
     
     `columns` can be a `pd.Series`, `np.array`, or column name in `df`.
     It's contain periodic/cyclic discrete values where the feature will be generated from.
     
     `lo` is the lowest possible value (inclusive) of the periodic/cyclic discrete values.
-    `hix` is highest value (exclusive) of the periodic/cyclic discrete values.
+    `nunique` is the cardinality of the periodic/cyclic discrete values.
     Examples:
-    - Minutes of hour : `lo=0, hix=60`.
-    - Hours of day : `lo=0, hix=24`.
-    - Months of year : `lo=1, hix=13` (January is usually denoted as `1`).
+    - Minutes of hour : `lo=0, nunique=60`.
+    - Hours of day : `lo=0, nunique=24`.
+    - Months of year : `lo=1, nunique=12` (January is usually denoted as `1`).
+    
+    The generated columns name will be prefixed with `prefix`.
+    If `prefix` is not defined, it will be inferred from `column` whenever possible.
     
     `plot` whether to visualize the generated feature to aid debugging.
     '''
@@ -29,10 +31,9 @@ def fourier(df, column, lo, hix, prefix=None, plot=True):
             prefix = series.name
         else:
             prefix = ''
-    nunique = hix-lo
-    series = (series-lo) / nunique
-    sin = np.sin(series*2*np.pi)
-    cos = np.cos(series*2*np.pi)
+    norm = (series-lo) / nunique
+    sin = np.sin(norm*2*np.pi)
+    cos = np.cos(norm*2*np.pi)
     df[f'{prefix}sin'] = sin
     df[f'{prefix}cos'] = cos
     if plot:
