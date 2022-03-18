@@ -27,10 +27,8 @@ def fourier(df, column, lo, nunique, prefix=None, plot=True):
     if isinstance(series, str):
         series = df[series]
     if prefix is None:
-        if hasattr(series, 'name'):
-            prefix = series.name
-        else:
-            prefix = ''
+        assert hasattr(series, 'name'), "`prefix` can't be None."
+        prefix = series.name
     norm = (series-lo) / nunique
     sin = np.sin(norm*2*np.pi)
     cos = np.cos(norm*2*np.pi)
