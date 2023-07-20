@@ -27,10 +27,10 @@ def get_pad_mask(size, skips, dtype=DEFAULT_DTYPE):
     result = result < np.expand_dims(skips, -1)
     result = result.astype(dtype)
     return result
-def get_random_pad_mask(size, skip, dtype=DEFAULT_DTYPE):
+def get_random_pad_mask(size, start, dtype=DEFAULT_DTYPE):
     '''
     size: A tuple of (batch, maxlen).
-    skip: 
+    start: 
         The lower-bound index where the padding may begin.
         Or the numbers of element to skip before the padding may begin.
         Value should inclusively fall between [1, maxlen].
@@ -44,8 +44,8 @@ def get_random_pad_mask(size, skip, dtype=DEFAULT_DTYPE):
     assert np.shape(size)[0] == 2
     batch = size[0]
     maxlen = size[1]
-    assert np.ndim(skip) == 0
-    assert skip > 0
-    assert skip <= maxlen
-    skips = np.random.randint(maxlen, size=batch) + 1
-    return get_pad_mask(size, skips)
+    assert np.ndim(start) == 0
+    assert start > 0
+    assert start <= maxlen
+    starts = np.random.randint(start, maxlen + 1, size=batch)
+    return get_pad_mask(size, starts)
