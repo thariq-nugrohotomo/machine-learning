@@ -9,6 +9,11 @@ def get_pad_mask(size, skips, dtype=DEFAULT_DTYPE):
         Or the numbers of element to skip before the padding begins.
         Value for each element should inclusively fall between [1, maxlen].
         Shape (batch,).
+
+    >>> get_pad_mask([3,4], [1,2,4])
+    array([[1, 0, 0, 0],
+           [1, 1, 0, 0],
+           [1, 1, 1, 1]])
     '''
     assert np.ndim(size) == 1
     assert np.shape(size)[0] == 2
