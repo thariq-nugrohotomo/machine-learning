@@ -52,7 +52,7 @@ def append_before_padding(matrix, val, padval):
     assert np.ndim(matrix) == 2
     assert np.ndim(padval) == 0
     result = matrix
-    result = np.concatenate([matrix, np.expand_dims([padval] * np.shape(matrix)[0], -1)], -1)
+    result = np.concatenate([result, np.expand_dims([padval] * np.shape(matrix)[0], -1)], -1)
     np.put_along_axis(
         result,
         np.argmax(result == padval, -1, keepdims=True),
