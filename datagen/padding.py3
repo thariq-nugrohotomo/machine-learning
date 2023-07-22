@@ -41,3 +41,23 @@ def get_random_padding_mask(size, min_length, dtype=DEFAULT_DTYPE):
     assert min_length <= max_width
     lengths = np.random.randint(min_length, max_width + 1, size=height)
     return get_padding_mask(size, lengths, dtype)
+
+def append_before_padding(matrix, val, padval):
+    '''
+    >>> mat = [[1, 2, 0, 0], [1, 2, 3, 4]]
+    >>> append_before_padding(mat, 9, 0)
+    array([[1, 2, 9, 0, 0],
+           [1, 2, 3, 4, 9]])
+    '''
+    assert np.ndim(matrix) == 2
+    assert np.ndim(padval) == 0
+    result = matrix
+    result = np.concatenate([matrix, np.expand_dims([padval] * np.shape(matrix)[0], -1)], -1)
+    np.put_along_axis(
+        result,
+        np.argmax(result == padval, -1, keepdims=True),
+        val,
+        -1,
+    )
+    return result
+
